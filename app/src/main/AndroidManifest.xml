@@ -2,7 +2,7 @@
     <application 
         android:label="@string/app_name" 
         android:icon="@drawable/ic_launcher_foreground"
-        android:theme="@style/Theme.AppCompat.NoActionBar">
+        android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
         
         <service
             android:name=".LapKeyService"

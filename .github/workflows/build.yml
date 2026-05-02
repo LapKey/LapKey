@@ -1,22 +1,28 @@
-name: LapKey Build & Release
+name: LapKey Auto Release
 
 on:
   push:
-    branches: [ "main" ]
-    tags:
-      - 'v*' # Memicu release jika ada tag seperti v1.0, v1.1, dll.
-  pull_request:
     branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # Wajib untuk membuat tag & release otomatis
 
     steps:
     - name: Checkout Repository
-        uses: actions/checkout@v4
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # Mengambil semua riwayat agar bisa hitung commit
+
+    - name: Set Version Name
+      run: |
+        # Menghitung jumlah commit sebagai nomor versi (misal: v1.0.45)
+        COUNT=$(git rev-list --count HEAD)
+        VERSION="v1.0.$COUNT"
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        echo "Auto-increment version: $VERSION"
 
     - name: set up JDK 17
       uses: actions/setup-java@v4
@@ -31,7 +37,6 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew assembleDebug
 
-    # Langkah Penandatanganan APK (Signing)
     - name: Sign APK
       uses: r0adkll/sign-android-release@v1
       id: sign_app
@@ -42,33 +47,25 @@ jobs:
         keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
         keyPassword: ${{ secrets.KEY_PASSWORD }}
       env:
-        # Menentukan lokasi build-tools secara eksplisit agar tidak nyasar ke 29.0.3
         BUILD_TOOLS_VERSION: "34.0.0"
 
-    # Upload sebagai Artifact (Bisa didownload di tab Actions)
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: LapKey-${{ tags.v* }}
-        path: ${{ steps.sign_app.outputs.signedReleaseFile }}
+    - name: Prepare Final APK
+      run: |
+        NEW_NAME="LapKey-${{ env.VERSION }}.apk"
+        mv ${{ steps.sign_app.outputs.signedReleaseFile }} app/build/outputs/apk/debug/${NEW_NAME}
+        echo "FINAL_APK_PATH=app/build/outputs/apk/debug/${NEW_NAME}" >> $GITHUB_ENV
 
-    # Membuat Release Otomatis (Hanya jika push menggunakan Tag)
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
-      if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: ${{ steps.sign_app.outputs.signedReleaseFile }}
-        name: LapKey Release ${{ github.ref_name }}
-        tag_name: ${{ github.ref }}
+        files: ${{ env.FINAL_APK_PATH }}
+        name: LapKey Release ${{ env.VERSION }}
+        tag_name: ${{ env.VERSION }}
         body: |
-          ### LapKey Update - Versi ${{ github.ref_name }}
-          Pembaruan terbaru untuk proyek LapKey oleh Hastagaming.
-
-          **Log Perubahan:**
-          - Penambahan Toolbar AI (Ikon Grid).
-          - Implementasi Suggestion Bar (Baris Saran).
-          - Perbaikan Layout QWERTY dan Baris Angka.
-          - APK sudah ditandatangani (Signed).
+          ### Auto-Generated Release
+          - Versi: ${{ env.VERSION }}
+          - Build otomatis dari push ke branch main.
+          - Komandan Nasa tidak perlu buat tag manual lagi!
         draft: false
         prerelease: false
       env:
