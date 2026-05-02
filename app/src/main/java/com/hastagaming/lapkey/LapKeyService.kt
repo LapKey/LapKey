@@ -10,10 +10,12 @@ class LapKeyService : InputMethodService(), KeyboardView.OnKeyboardActionListene
 
     private lateinit var keyboardView: KeyboardView
     private lateinit var qwertyKeyboard: Keyboard
+    private lateinit var candidateContainer: LinearLayout    
 
     override fun onCreateInputView(): View {
         keyboardView = layoutInflater.inflate(R.layout.keyboard_view, null) as KeyboardView
         qwertyKeyboard = Keyboard(this, R.xml.qwerty)
+        candidateContainer = root.findViewById(R.id.candidate_container)
         keyboardView.keyboard = qwertyKeyboard
         keyboardView.setOnKeyboardActionListener(this)
         return keyboardView
@@ -27,6 +29,30 @@ class LapKeyService : InputMethodService(), KeyboardView.OnKeyboardActionListene
            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
            startActivity(intent)
        }
+
+    override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
+       super.onStartInputView(info, restarting)
+       // Logika untuk mendeteksi tipe input (search, send, go) bisa ditaruh di sini
+   }
+
+   fun setSuggestions(suggestions: List<String>) {
+   candidateContainer.removeAllViews()
+    
+   for (word in suggestions) {
+       val itemView = layoutInflater.inflate(R.layout.candidate_item, null)
+       val textView = itemView.findViewById<TextView>(R.id.candidate_word)
+        
+       textView.text = word
+       textView.setOnClickListener {
+           // Masukkan kata yang diklik ke input field
+           currentInputConnection.commitText(word + " ", 1)
+           // Kosongkan saran setelah dipilih
+           candidateContainer.removeAllViews()
+       }
+        
+       candidateContainer.addView(itemView)
+       }
+   }
 
        keyboardView.keyboard = Keyboard(this, R.xml.qwerty)
        keyboardView.setOnKeyboardActionListener(this)
