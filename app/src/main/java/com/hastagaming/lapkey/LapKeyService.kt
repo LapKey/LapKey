@@ -19,6 +19,20 @@ class LapKeyService : InputMethodService(), KeyboardView.OnKeyboardActionListene
         return keyboardView
     }
 
+    override fun onCreateInputView(): View {
+    val root = layoutInflater.inflate(R.layout.keyboard_view, null)
+    keyboardView = root.findViewById(R.id.keyboard_view)
+     root.findViewById<ImageButton>(R.id.btn_ai_menu).setOnClickListener{
+           val intent = Intent(this, SettingsActivity::class.java)
+           intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+           startActivity(intent)
+       }
+
+       keyboardView.keyboard = Keyboard(this, R.xml.qwerty)
+       keyboardView.setOnKeyboardActionListener(this)
+       return root
+   }
+
     override fun onKey(primaryCode: Int, keyCodes: IntArray?) {
         val ic = currentInputConnection ?: return
         when (primaryCode) {
