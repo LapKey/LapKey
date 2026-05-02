@@ -1,5 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <application android:label="@string/app_name" android:icon="@mipmap/ic_launcher">
+    <application 
+        android:label="@string/app_name" 
+        android:icon="@drawable/ic_launcher_foreground"
+        android:theme="@style/Theme.AppCompat.NoActionBar">
+        
         <service
             android:name=".LapKeyService"
             android:label="@string/ime_name"
