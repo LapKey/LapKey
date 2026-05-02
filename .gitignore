@@ -1,0 +1,21 @@
+# Android build artifacts
+**/build/
+*.apk
+*.aar
+
+# Gradle files
+.gradle/
+build/
+/local.properties
+.navigation/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+
+# System files
+*.swp
+*~
+.DS_Store
+local.properties
