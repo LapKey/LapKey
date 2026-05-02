@@ -16,5 +16,15 @@
                 android:name="android.view.im"
                 android:resource="@xml/method" />
         </service>
+        <activity 
+            android:name=".SettingsActivity"
+            android:label="Settings LapKey"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.PREFERENCE" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

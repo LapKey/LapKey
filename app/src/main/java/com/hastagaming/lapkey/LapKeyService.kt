@@ -59,6 +59,12 @@ class LapKeyService : InputMethodService(), KeyboardView.OnKeyboardActionListene
        return root
    }
 
+   root.findViewById<ImageButton>(R.id.btn_ai_menu).setOnClickListener {
+       val intent = Intent(this, SettingsActivity::class.java)
+       intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) // Wajib agar bisa buka activity dari Service
+       startActivity(intent)
+   }
+
     override fun onKey(primaryCode: Int, keyCodes: IntArray?) {
         val ic = currentInputConnection ?: return
         when (primaryCode) {
