@@ -1,0 +1,15 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory app:title="AI Configuration (BYOK)">
+        <ListPreference
+            app:defaultValue="gemini"
+            app:entries="@array/ai_models"
+            app:entryValues="@array/ai_model_values"
+            app:key="selected_model"
+            app:title="select AI Model" />
+        
+        <EditTextPreference
+            app:key="api_key"
+            app:title="Insert your api key"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+</PreferenceScreen>
