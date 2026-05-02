@@ -39,6 +39,9 @@ jobs:
         alias: ${{ secrets.KEY_ALIAS }}
         keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
         keyPassword: ${{ secrets.KEY_PASSWORD }}
+      env:
+        # Menentukan lokasi build-tools secara eksplisit agar tidak nyasar ke 29.0.3
+        BUILD_TOOLS_VERSION: "34.0.0"
 
     # Upload sebagai Artifact (Bisa didownload di tab Actions)
     - name: Upload Artifact
@@ -58,7 +61,7 @@ jobs:
         body: |
           ### LapKey Update - Versi ${{ github.ref_name }}
           Pembaruan terbaru untuk proyek LapKey oleh Hastagaming.
-          
+
           **Log Perubahan:**
           - Penambahan Toolbar AI (Ikon Grid).
           - Implementasi Suggestion Bar (Baris Saran).
