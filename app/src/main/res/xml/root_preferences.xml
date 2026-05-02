@@ -3,7 +3,7 @@
         <ListPreference
             app:defaultValue="gemini"
             app:entries="@array/ai_providers"
-            app:entryValues="@array/ai_model_values"
+            app:entryValues="@array/ai_provider_values"
             app:key="selected_model"
             app:title="select AI Model" />
         
