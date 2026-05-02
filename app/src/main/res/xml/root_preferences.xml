@@ -2,7 +2,7 @@
     <PreferenceCategory app:title="AI Configuration (BYOK)">
         <ListPreference
             app:defaultValue="gemini"
-            app:entries="@array/ai_models"
+            app:entries="@array/ai_providers"
             app:entryValues="@array/ai_model_values"
             app:key="selected_model"
             app:title="select AI Model" />
